@@ -49,7 +49,19 @@ public class SyncRequestImpl implements SyncRequestClient {
             Long endTime, Integer limit) {
         return RestApiInvoker.callSync(requestImpl.getCandlestick(symbol, interval, startTime, endTime, limit));
     }
-    
+
+    @Override
+    public List<Candlestick> getIndexPriceCandlestick(String pair, CandlestickInterval interval, Long startTime,
+                                            Long endTime, Integer limit) {
+        return RestApiInvoker.callSync(requestImpl.getIndexPriceCandlestick(pair, interval, startTime, endTime, limit));
+    }
+
+    @Override
+    public List<Candlestick> getMarkPriceCandlestick(String symbol, CandlestickInterval interval, Long startTime,
+                                                      Long endTime, Integer limit) {
+        return RestApiInvoker.callSync(requestImpl.getMarkPriceCandlestick(symbol, interval, startTime, endTime, limit));
+    }
+
     @Override
     public List<MarkPrice> getMarkPrice(String symbol) {
         return RestApiInvoker.callSync(requestImpl.getMarkPrice(symbol));
@@ -61,23 +73,23 @@ public class SyncRequestImpl implements SyncRequestClient {
     }
     
     @Override
-    public List<PriceChangeTicker> get24hrTickerPriceChange(String symbol) {
-        return RestApiInvoker.callSync(requestImpl.get24hrTickerPriceChange(symbol));
+    public List<PriceChangeTicker> get24hrTickerPriceChange(String symbol, String pair) {
+        return RestApiInvoker.callSync(requestImpl.get24hrTickerPriceChange(symbol, pair));
     }
     
     @Override
-    public List<SymbolPrice> getSymbolPriceTicker(String symbol) {
-        return RestApiInvoker.callSync(requestImpl.getSymbolPriceTicker(symbol));
+    public List<SymbolPrice> getSymbolPriceTicker(String symbol, String pair) {
+        return RestApiInvoker.callSync(requestImpl.getSymbolPriceTicker(symbol, pair));
     }
     
     @Override
-    public List<SymbolOrderBook> getSymbolOrderBookTicker(String symbol) {
-        return RestApiInvoker.callSync(requestImpl.getSymbolOrderBookTicker(symbol));
+    public List<SymbolOrderBook> getSymbolOrderBookTicker(String symbol, String pair) {
+        return RestApiInvoker.callSync(requestImpl.getSymbolOrderBookTicker(symbol, pair));
     }
     
     @Override
-    public List<LiquidationOrder> getLiquidationOrders(String symbol, Long startTime, Long endTime, Integer limit) {
-        return RestApiInvoker.callSync(requestImpl.getLiquidationOrders(symbol, startTime, endTime, limit));
+    public List<LiquidationOrder> getLiquidationOrders(String symbol, String pair, Long startTime, Long endTime, Integer limit) {
+        return RestApiInvoker.callSync(requestImpl.getLiquidationOrders(symbol, pair, startTime, endTime, limit));
     }
 
     @Override

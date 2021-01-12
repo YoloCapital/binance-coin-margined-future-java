@@ -9,6 +9,10 @@ public class OrderBook {
 
     private Long lastUpdateId;
 
+    private String symbol;
+
+    private String pair;
+
     private List<OrderBookEntry> bids;
 
     private List<OrderBookEntry> asks;
@@ -19,6 +23,22 @@ public class OrderBook {
 
     public void setLastUpdateId(Long lastUpdateId) {
         this.lastUpdateId = lastUpdateId;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
+
+    public String getPair() {
+        return pair;
+    }
+
+    public void setPair(String pair) {
+        this.pair = pair;
     }
 
     public List<OrderBookEntry> getBids() {
@@ -40,6 +60,8 @@ public class OrderBook {
     @Override
     public String toString() {
         return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE)
-                .append("lastUpdateId", lastUpdateId).append("bids", bids).append("asks", asks).toString();
+                .append("lastUpdateId", lastUpdateId)
+                .append("symbol", symbol).append("pair", pair)
+                .append("bids", bids).append("asks", asks).toString();
     }
 }

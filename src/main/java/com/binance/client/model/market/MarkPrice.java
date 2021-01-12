@@ -9,9 +9,13 @@ public class MarkPrice {
 
     private String symbol;
 
+    private String pair;
+
     private BigDecimal markPrice;
 
     private BigDecimal indexPrice;
+
+    private BigDecimal estimatedSettlePrice;
 
     private BigDecimal lastFundingRate;
 
@@ -29,6 +33,14 @@ public class MarkPrice {
         this.symbol = symbol;
     }
 
+    public String getPair() {
+        return pair;
+    }
+
+    public void setPair(String pair) {
+        this.pair = pair;
+    }
+
     public BigDecimal getMarkPrice() {
         return markPrice;
     }
@@ -40,6 +52,14 @@ public class MarkPrice {
     public BigDecimal getIndexPrice() { return indexPrice; }
 
     public void setIndexPrice(BigDecimal indexPrice) { this.indexPrice = indexPrice; }
+
+    public BigDecimal getEstimatedSettlePrice() {
+        return estimatedSettlePrice;
+    }
+
+    public void setEstimatedSettlePrice(BigDecimal estimatedSettlePrice) {
+        this.estimatedSettlePrice = estimatedSettlePrice;
+    }
 
     public BigDecimal getLastFundingRate() {
         return lastFundingRate;
@@ -71,8 +91,10 @@ public class MarkPrice {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("symbol", symbol)
-                .append("markPrice", markPrice).append("indexPrice", indexPrice).append("lastFundingRate", lastFundingRate)
+        return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE)
+                .append("symbol", symbol).append("pair", pair)
+                .append("markPrice", markPrice).append("indexPrice", indexPrice)
+                .append("estimatedSettlePrice", estimatedSettlePrice).append("lastFundingRate", lastFundingRate)
                 .append("nextFundingTime", nextFundingTime).append("interestRate", interestRate).append("time", time).toString();
     }
 }

@@ -9,6 +9,8 @@ public class PriceChangeTicker {
 
     private String symbol;
 
+    private String pair;
+
     private BigDecimal priceChange;
 
     private BigDecimal priceChangePercent;
@@ -45,6 +47,14 @@ public class PriceChangeTicker {
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
+    }
+
+    public String getPair() {
+        return pair;
+    }
+
+    public void setPair(String pair) {
+        this.pair = pair;
     }
 
     public BigDecimal getPriceChange() {
@@ -169,7 +179,8 @@ public class PriceChangeTicker {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("symbol", symbol)
+        return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE)
+                .append("symbol", symbol).append("pair", pair)
                 .append("priceChange", priceChange).append("priceChangePercent", priceChangePercent)
                 .append("weightedAvgPrice", weightedAvgPrice).append("lastPrice", lastPrice).append("lastQty", lastQty)
                 .append("openPrice", openPrice).append("highPrice", highPrice).append("lowPrice", lowPrice)

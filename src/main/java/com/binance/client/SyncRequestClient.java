@@ -98,6 +98,20 @@ public interface SyncRequestClient {
     List<Candlestick> getCandlestick(String symbol, CandlestickInterval interval, Long startTime, Long endTime, Integer limit);
 
     /**
+     * Get kline/candlestick bars for a symbol.
+     *
+     * @return Kline/candlestick bars for a symbol.
+     */
+    List<Candlestick> getIndexPriceCandlestick(String pair, CandlestickInterval interval, Long startTime, Long endTime, Integer limit);
+
+    /**
+     * Get kline/candlestick bars for a symbol.
+     *
+     * @return Kline/candlestick bars for a symbol.
+     */
+    List<Candlestick> getMarkPriceCandlestick(String symbol, CandlestickInterval interval, Long startTime, Long endTime, Integer limit);
+
+    /**
      * Get mark price for a symbol.
      *
      * @return Mark price for a symbol.
@@ -116,28 +130,28 @@ public interface SyncRequestClient {
      *
      * @return 24 hour rolling window price change statistics.
      */
-    List<PriceChangeTicker> get24hrTickerPriceChange(String symbol);
+    List<PriceChangeTicker> get24hrTickerPriceChange(String symbol, String pair);
 
     /**
      * Get latest price for a symbol or symbols.
      *
      * @return Latest price for a symbol or symbols.
      */
-    List<SymbolPrice> getSymbolPriceTicker(String symbol);
+    List<SymbolPrice> getSymbolPriceTicker(String symbol, String pair);
 
     /**
      * Get best price/qty on the order book for a symbol or symbols.
      *
      * @return Best price/qty on the order book for a symbol or symbols.
      */
-    List<SymbolOrderBook> getSymbolOrderBookTicker(String symbol);
+    List<SymbolOrderBook> getSymbolOrderBookTicker(String symbol, String pair);
 
     /**
      * Get all liquidation orders.
      *
      * @return All liquidation orders.
      */
-    List<LiquidationOrder> getLiquidationOrders(String symbol, Long startTime, Long endTime, Integer limit);
+    List<LiquidationOrder> getLiquidationOrders(String symbol, String pair, Long startTime, Long endTime, Integer limit);
 
     /**
      * Place new orders

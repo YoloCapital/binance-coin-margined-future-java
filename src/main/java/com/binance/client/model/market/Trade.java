@@ -13,7 +13,7 @@ public class Trade {
 
     private BigDecimal qty;
 
-    private BigDecimal quoteQty;
+    private BigDecimal baseQty;
 
     private Long time;
 
@@ -43,12 +43,12 @@ public class Trade {
         this.qty = qty;
     }
 
-    public BigDecimal getQuoteQty() {
-        return quoteQty;
+    public BigDecimal getBaseQty() {
+        return baseQty;
     }
 
-    public void setQuoteQty(BigDecimal quoteQty) {
-        this.quoteQty = quoteQty;
+    public void setBaseQty(BigDecimal baseQty) {
+        this.baseQty = baseQty;
     }
 
     public Long getTime() {
@@ -70,7 +70,7 @@ public class Trade {
     @Override
     public String toString() {
         return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("id", id)
-                .append("price", price).append("qty", qty).append("quoteQty", quoteQty).append("time", time)
+                .append("price", price).append("qty", qty).append("baseQty", baseQty).append("time", time)
                 .append("isBuyerMaker", isBuyerMaker).toString();
     }
 }
