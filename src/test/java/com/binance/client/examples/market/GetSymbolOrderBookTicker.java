@@ -10,7 +10,7 @@ public class GetSymbolOrderBookTicker {
         RequestOptions options = new RequestOptions();
         SyncRequestClient syncRequestClient = SyncRequestClient.create(PrivateConfig.API_KEY, PrivateConfig.SECRET_KEY,
                 options);
-        System.out.println(syncRequestClient.getSymbolOrderBookTicker("BTCUSD_PERP", "BTCUSD"));
-        // System.out.println(syncRequestClient.getSymbolOrderBookTicker(null));
+        System.out.println(syncRequestClient.getSymbolOrderBookTicker("BTCUSD_PERP", null));
+        System.out.println(syncRequestClient.getSymbolOrderBookTicker(null, "BTCUSD"));
     }
 }

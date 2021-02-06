@@ -13,6 +13,8 @@ public class SymbolTickerEvent {
 
     private String symbol;
 
+    private String pair;
+
     private BigDecimal priceChange;
 
     private BigDecimal priceChangePercent;
@@ -65,6 +67,14 @@ public class SymbolTickerEvent {
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
+    }
+
+    public String getPair() {
+        return pair;
+    }
+
+    public void setPair(String pair) {
+        this.pair = pair;
     }
 
     public BigDecimal getPriceChange() {
@@ -190,7 +200,7 @@ public class SymbolTickerEvent {
     @Override
     public String toString() {
         return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("eventType", eventType)
-                .append("eventTime", eventTime).append("symbol", symbol).append("priceChange", priceChange)
+                .append("eventTime", eventTime).append("symbol", symbol).append("pair", pair).append("priceChange", priceChange)
                 .append("priceChangePercent", priceChangePercent).append("weightedAvgPrice", weightedAvgPrice)
                 .append("lastPrice", lastPrice).append("lastQty", lastQty).append("open", open).append("high", high)
                 .append("low", low).append("totalTradedBaseAssetVolume", totalTradedBaseAssetVolume)
@@ -198,4 +208,5 @@ public class SymbolTickerEvent {
                 .append("closeTime", closeTime).append("firstId", firstId).append("lastId", lastId)
                 .append("count", count).toString();
     }
+
 }

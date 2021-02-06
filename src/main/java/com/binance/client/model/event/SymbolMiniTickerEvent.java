@@ -13,6 +13,8 @@ public class SymbolMiniTickerEvent {
 
     private String symbol;
 
+    private String pair;
+
     private BigDecimal open;
 
     private BigDecimal close;
@@ -47,6 +49,14 @@ public class SymbolMiniTickerEvent {
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
+    }
+
+    public String getPair() {
+        return pair;
+    }
+
+    public void setPair(String pair) {
+        this.pair = pair;
     }
 
     public BigDecimal getOpen() {
@@ -100,7 +110,8 @@ public class SymbolMiniTickerEvent {
     @Override
     public String toString() {
         return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("eventType", eventType)
-                .append("eventTime", eventTime).append("symbol", symbol).append("open", open).append("close", close)
+                .append("eventTime", eventTime).append("symbol", symbol).append("pair", pair)
+                .append("open", open).append("close", close)
                 .append("high", high).append("low", low)
                 .append("totalTradedBaseAssetVolume", totalTradedBaseAssetVolume)
                 .append("totalTradedQuoteAssetVolume", totalTradedQuoteAssetVolume).toString();

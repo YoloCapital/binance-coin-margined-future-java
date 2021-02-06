@@ -9,7 +9,7 @@ public class SubscribeMarkPrice {
 
         SubscriptionClient client = SubscriptionClient.create(PrivateConfig.API_KEY, PrivateConfig.SECRET_KEY);
    
-        client.subscribeMarkPriceEvent("btcusdt", ((event) -> {
+        client.subscribeMarkPriceEvent("btcusd_210326", ((event) -> {
             System.out.println(event);
             client.unsubscribeAll();
         }), null);

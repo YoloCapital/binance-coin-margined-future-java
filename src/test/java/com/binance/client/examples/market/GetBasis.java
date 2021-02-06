@@ -2,14 +2,15 @@ package com.binance.client.examples.market;
 
 import com.binance.client.RequestOptions;
 import com.binance.client.SyncRequestClient;
-
 import com.binance.client.examples.constants.PrivateConfig;
+import com.binance.client.model.enums.CandlestickInterval;
+import com.binance.client.model.enums.ContractType;
 
-public class GetFundingRate {
+public class GetBasis {
     public static void main(String[] args) {
         RequestOptions options = new RequestOptions();
         SyncRequestClient syncRequestClient = SyncRequestClient.create(PrivateConfig.API_KEY, PrivateConfig.SECRET_KEY,
                 options);
-        System.out.println(syncRequestClient.getFundingRate("BTCUSD_PERP", null, null, null));
+        System.out.println(syncRequestClient.getBasis("BTCUSD", ContractType.PERPETUAL, CandlestickInterval.ONE_MINUTE, null, null, null));
     }
 }

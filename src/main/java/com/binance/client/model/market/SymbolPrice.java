@@ -11,6 +11,8 @@ public class SymbolPrice {
 
     private BigDecimal price;
 
+    private Long timestamp;
+
     public String getSymbol() {
         return symbol;
     }
@@ -27,9 +29,17 @@ public class SymbolPrice {
         this.price = price;
     }
 
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("symbol", symbol)
-                .append("price", price).toString();
+                .append("price", price).append("timestamp", timestamp).toString();
     }
 }

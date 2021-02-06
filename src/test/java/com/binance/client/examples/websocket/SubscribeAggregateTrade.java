@@ -9,7 +9,7 @@ public class SubscribeAggregateTrade {
 
         SubscriptionClient client = SubscriptionClient.create(PrivateConfig.API_KEY, PrivateConfig.SECRET_KEY);
    
-        client.subscribeAggregateTradeEvent("btcusdt", ((event) -> {
+        client.subscribeAggregateTradeEvent("btcusd_perp", ((event) -> {
             System.out.println(event);
             client.unsubscribeAll();
         }), null);

@@ -10,7 +10,7 @@ public class SubscribeCandlestick {
 
         SubscriptionClient client = SubscriptionClient.create(PrivateConfig.API_KEY, PrivateConfig.SECRET_KEY);
    
-        client.subscribeCandlestickEvent("btcusdt", CandlestickInterval.ONE_MINUTE, ((event) -> {
+        client.subscribeCandlestickEvent("btcusd_perp", CandlestickInterval.ONE_MINUTE, ((event) -> {
             System.out.println(event);
             client.unsubscribeAll();
         }), null);

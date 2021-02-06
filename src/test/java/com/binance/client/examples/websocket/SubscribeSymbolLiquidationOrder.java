@@ -9,7 +9,7 @@ public class SubscribeSymbolLiquidationOrder {
 
         SubscriptionClient client = SubscriptionClient.create(PrivateConfig.API_KEY, PrivateConfig.SECRET_KEY);
    
-        client.subscribeSymbolLiquidationOrderEvent("btcusdt", ((event) -> {
+        client.subscribeSymbolLiquidationOrderEvent("btcusd_perp", ((event) -> {
             System.out.println(event);
             client.unsubscribeAll();
         }), null);

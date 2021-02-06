@@ -3,6 +3,7 @@ package com.binance.client.impl.utils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.binance.client.model.enums.CandlestickInterval;
+import com.binance.client.model.enums.ContractType;
 
 public abstract class Channels {
 
@@ -38,7 +39,37 @@ public abstract class Channels {
         json.put("method", "SUBSCRIBE");
         return json.toJSONString();
     }
-  
+
+    public static String continuousCandlestickChannel(String pair, ContractType contractType, CandlestickInterval interval) {
+        JSONObject json = new JSONObject();
+        JSONArray params = new JSONArray();
+        params.add(pair + "_" + contractType.toString().toLowerCase() + "@continuousKline_" + interval);
+        json.put("params", params);
+        json.put("id", System.currentTimeMillis());
+        json.put("method", "SUBSCRIBE");
+        return json.toJSONString();
+    }
+
+    public static String indexPriceCandlestickChannel(String pair, CandlestickInterval interval) {
+        JSONObject json = new JSONObject();
+        JSONArray params = new JSONArray();
+        params.add(pair + "@indexPriceKline_" + interval);
+        json.put("params", params);
+        json.put("id", System.currentTimeMillis());
+        json.put("method", "SUBSCRIBE");
+        return json.toJSONString();
+    }
+
+    public static String markPricecandlestickChannel(String symbol, CandlestickInterval interval) {
+        JSONObject json = new JSONObject();
+        JSONArray params = new JSONArray();
+        params.add(symbol + "@markPriceKline_" + interval);
+        json.put("params", params);
+        json.put("id", System.currentTimeMillis());
+        json.put("method", "SUBSCRIBE");
+        return json.toJSONString();
+    }
+
     public static String miniTickerChannel(String symbol) {
         JSONObject json = new JSONObject();
         JSONArray params = new JSONArray();

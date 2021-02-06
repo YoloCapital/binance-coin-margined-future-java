@@ -29,7 +29,7 @@ public class PriceChangeTicker {
 
     private BigDecimal volume;
 
-    private BigDecimal quoteVolume;
+    private BigDecimal baseVolume;
 
     private Long openTime;
 
@@ -129,12 +129,12 @@ public class PriceChangeTicker {
         this.volume = volume;
     }
 
-    public BigDecimal getQuoteVolume() {
-        return quoteVolume;
+    public BigDecimal getBaseVolume() {
+        return baseVolume;
     }
 
-    public void setQuoteVolume(BigDecimal quoteVolume) {
-        this.quoteVolume = quoteVolume;
+    public void setBaseVolume(BigDecimal quoteVolume) {
+        this.baseVolume = baseVolume;
     }
 
     public Long getOpenTime() {
@@ -184,7 +184,7 @@ public class PriceChangeTicker {
                 .append("priceChange", priceChange).append("priceChangePercent", priceChangePercent)
                 .append("weightedAvgPrice", weightedAvgPrice).append("lastPrice", lastPrice).append("lastQty", lastQty)
                 .append("openPrice", openPrice).append("highPrice", highPrice).append("lowPrice", lowPrice)
-                .append("volume", volume).append("quoteVolume", quoteVolume).append("openTime", openTime)
+                .append("volume", volume).append("baseVolume", baseVolume).append("openTime", openTime)
                 .append("closeTime", closeTime).append("firstId", firstId).append("lastId", lastId)
                 .append("count", count).toString();
     }

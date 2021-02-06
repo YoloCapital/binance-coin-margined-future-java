@@ -343,6 +343,43 @@ class RestApiRequestImpl {
         return request;
     }
 
+    RestApiRequest<List<MarkPrice>> getMarkPrice(String symbol, String pair) {
+        RestApiRequest<List<MarkPrice>> request = new RestApiRequest<>();
+        UrlParamsBuilder builder = UrlParamsBuilder.build()
+                .putToUrl("symbol", symbol)
+                .putToUrl("pair", pair);
+        request.request = createRequestByGet("/dapi/v1/premiumIndex", builder);
+
+        request.jsonParser = (jsonWrapper -> {
+            List<MarkPrice> result = new LinkedList<>();
+            JsonWrapperArray dataArray = new JsonWrapperArray(new JSONArray());
+            if (jsonWrapper.containKey("data")) {
+                dataArray = jsonWrapper.getJsonArray("data");
+            } else {
+                dataArray.add(jsonWrapper.convert2JsonObject());
+            }
+            dataArray.forEach((item) -> {
+                MarkPrice element = new MarkPrice();
+                element.setSymbol(item.getString("symbol"));
+                element.setPair(item.getString("pair"));
+                element.setMarkPrice(item.getBigDecimal("markPrice"));
+                element.setIndexPrice(item.getBigDecimal("indexPrice"));
+                element.setEstimatedSettlePrice(item.getBigDecimal("estimatedSettlePrice"));
+                element.setNextFundingTime(item.getLong("nextFundingTime"));
+                if (!item.getString("lastFundingRate").equals(""))
+                    element.setLastFundingRate(item.getBigDecimal("lastFundingRate"));
+                if (!item.getString("interestRate").equals(""))
+                    element.setInterestRate(item.getBigDecimal("interestRate"));
+                element.setTime(item.getLong("time"));
+                result.add(element);
+            });
+
+            return result;
+
+        });
+        return request;
+    }
+
     RestApiRequest<List<Candlestick>> getCandlestick(String symbol, CandlestickInterval interval, Long startTime,
                                                      Long endTime, Integer limit) {
         RestApiRequest<List<Candlestick>> request = new RestApiRequest<>();
@@ -353,6 +390,43 @@ class RestApiRequestImpl {
                 .putToUrl("endTime", endTime)
                 .putToUrl("limit", limit);
         request.request = createRequestByGet("/dapi/v1/klines", builder);
+
+        request.jsonParser = (jsonWrapper -> {
+            List<Candlestick> result = new LinkedList<>();
+            JsonWrapperArray dataArray = jsonWrapper.getJsonArray("data");
+            dataArray.forEachAsArray((item) -> {
+                Candlestick element = new Candlestick();
+                element.setOpenTime(item.getLongAt(0));
+                element.setOpen(item.getBigDecimalAt(1));
+                element.setHigh(item.getBigDecimalAt(2));
+                element.setLow(item.getBigDecimalAt(3));
+                element.setClose(item.getBigDecimalAt(4));
+                element.setVolume(item.getBigDecimalAt(5));
+                element.setCloseTime(item.getLongAt(6));
+                element.setBaseAssetVolume(item.getBigDecimalAt(7));
+                element.setNumTrades(item.getIntegerAt(8));
+                element.setTakerBuyQuoteAssetVolume(item.getBigDecimalAt(9));
+                element.setTakerBuyBaseAssetVolume(item.getBigDecimalAt(10));
+                element.setIgnore(item.getBigDecimalAt(11));
+                result.add(element);
+            });
+
+            return result;
+        });
+        return request;
+    }
+
+    RestApiRequest<List<Candlestick>> getContinuousCandlestick(String symbol, ContractType contractType, CandlestickInterval interval,
+                                                               Long startTime, Long endTime, Integer limit) {
+        RestApiRequest<List<Candlestick>> request = new RestApiRequest<>();
+        UrlParamsBuilder builder = UrlParamsBuilder.build()
+                .putToUrl("pair", symbol)
+                .putToUrl("contractType", contractType)
+                .putToUrl("interval", interval)
+                .putToUrl("startTime", startTime)
+                .putToUrl("endTime", endTime)
+                .putToUrl("limit", limit);
+        request.request = createRequestByGet("/dapi/v1/continuousKlines", builder);
 
         request.jsonParser = (jsonWrapper -> {
             List<Candlestick> result = new LinkedList<>();
@@ -410,11 +484,11 @@ class RestApiRequestImpl {
         return request;
     }
 
-    RestApiRequest<List<Candlestick>> getMarkPriceCandlestick(String pair, CandlestickInterval interval, Long startTime,
+    RestApiRequest<List<Candlestick>> getMarkPriceCandlestick(String symbol, CandlestickInterval interval, Long startTime,
                                                                Long endTime, Integer limit) {
         RestApiRequest<List<Candlestick>> request = new RestApiRequest<>();
         UrlParamsBuilder builder = UrlParamsBuilder.build()
-                .putToUrl("symbol", pair)
+                .putToUrl("symbol", symbol)
                 .putToUrl("interval", interval)
                 .putToUrl("startTime", startTime)
                 .putToUrl("endTime", endTime)
@@ -437,42 +511,6 @@ class RestApiRequestImpl {
             });
 
             return result;
-        });
-        return request;
-    }
-
-    RestApiRequest<List<MarkPrice>> getMarkPrice(String symbol) {
-        RestApiRequest<List<MarkPrice>> request = new RestApiRequest<>();
-        UrlParamsBuilder builder = UrlParamsBuilder.build()
-                .putToUrl("symbol", symbol);
-        request.request = createRequestByGet("/dapi/v1/premiumIndex", builder);
-
-        request.jsonParser = (jsonWrapper -> {
-            List<MarkPrice> result = new LinkedList<>();
-            JsonWrapperArray dataArray = new JsonWrapperArray(new JSONArray());
-            if (jsonWrapper.containKey("data")) {
-                dataArray = jsonWrapper.getJsonArray("data");
-            } else {
-                dataArray.add(jsonWrapper.convert2JsonObject());
-            }
-            dataArray.forEach((item) -> {
-                MarkPrice element = new MarkPrice();
-                element.setSymbol(item.getString("symbol"));
-                element.setPair(item.getString("pair"));
-                element.setMarkPrice(item.getBigDecimal("markPrice"));
-                element.setIndexPrice(item.getBigDecimal("indexPrice"));
-                element.setEstimatedSettlePrice(item.getBigDecimal("estimatedSettlePrice"));
-                element.setNextFundingTime(item.getLong("nextFundingTime"));
-                if (item.getBigDecimalOrDefault("lastFundingRate", null) != null)
-                    element.setLastFundingRate(item.getBigDecimal("lastFundingRate"));
-                if (item.getBigDecimalOrDefault("interestRate", null) != null)
-                    element.setInterestRate(item.getBigDecimal("interestRate"));
-                element.setTime(item.getLong("time"));
-                result.add(element);
-            });
-
-            return result;
-
         });
         return request;
     }
@@ -530,7 +568,7 @@ class RestApiRequestImpl {
                 element.setHighPrice(item.getBigDecimal("highPrice"));
                 element.setLowPrice(item.getBigDecimal("lowPrice"));
                 element.setVolume(item.getBigDecimal("volume"));
-                element.setQuoteVolume(item.getBigDecimal("quoteVolume"));
+                element.setBaseVolume(item.getBigDecimal("baseVolume"));
                 element.setOpenTime(item.getLong("openTime"));
                 element.setCloseTime(item.getLong("closeTime"));
                 element.setFirstId(item.getLong("firstId"));
@@ -564,6 +602,7 @@ class RestApiRequestImpl {
                 element.setSymbol(item.getString("symbol"));
                 element.setSymbol(item.getString("ps"));
                 element.setPrice(item.getBigDecimal("price"));
+                element.setTimestamp(item.getLong("time"));
                 result.add(element);
             });
 
@@ -625,10 +664,44 @@ class RestApiRequestImpl {
                 element.setOrigQty(item.getBigDecimal("origQty"));
                 element.setExecutedQty(item.getBigDecimal("executedQty"));
                 element.setAveragePrice(item.getBigDecimal("averagePrice"));
+                element.setStatus(item.getString("status"));
                 element.setTimeInForce(item.getString("timeInForce"));
-                element.setType(item.getString("symbol"));
+                element.setType(item.getString("type"));
                 element.setSide(item.getString("side"));
                 element.setTime(item.getLong("time"));
+                result.add(element);
+            });
+
+            return result;
+        });
+        return request;
+    }
+
+    RestApiRequest<List<Basis>> getBasis(String pair, ContractType contractType, CandlestickInterval period, Long startTime,
+                                                                Long endTime, Integer limit) {
+        RestApiRequest<List<Basis>> request = new RestApiRequest<>();
+        UrlParamsBuilder builder = UrlParamsBuilder.build()
+                .putToUrl("pair", pair)
+                .putToUrl("contractType", contractType)
+                .putToUrl("period", period)
+                .putToUrl("startTime", startTime)
+                .putToUrl("endTime", endTime)
+                .putToUrl("limit", limit);
+        request.request = createRequestByGetWithApikey("/futures/data/basis", builder);
+
+        request.jsonParser = (jsonWrapper -> {
+            List<Basis> result = new LinkedList<>();
+            JsonWrapperArray dataArray = jsonWrapper.getJsonArray("data");
+
+            dataArray.forEach((item) -> {
+                Basis element = new Basis();
+                element.setPair(item.getString("pair"));
+                element.setContractType(item.getString("contractType"));
+                element.setFuturesPrice(item.getBigDecimal("futuresPrice"));
+                element.setIndexPrice(item.getBigDecimal("indexPrice"));
+                element.setBasis(item.getBigDecimal("basis"));
+                element.setBasisRate(item.getBigDecimal("basisRate"));
+                element.setTimestamp(item.getLong("timestamp"));
                 result.add(element);
             });
 
@@ -658,10 +731,10 @@ class RestApiRequestImpl {
                 } else {
                     Order o = new Order();
                     JSONObject jsonObj = (JSONObject) obj;
-                    o.setClientOrderId(jsonObj.getString("clientOrderId"));
-                    o.setCumQuote(jsonObj.getBigDecimal("cumQuote"));
+                    o.setCumBase(jsonObj.getBigDecimal("cumBase"));
                     o.setExecutedQty(jsonObj.getBigDecimal("executedQty"));
                     o.setOrderId(jsonObj.getLong("orderId"));
+                    o.setAvgPrice(jsonObj.getBigDecimal("avgPrice"));
                     o.setOrigQty(jsonObj.getBigDecimal("origQty"));
                     o.setPrice(jsonObj.getBigDecimal("price"));
                     o.setReduceOnly(jsonObj.getBoolean("reduceOnly"));
@@ -669,11 +742,14 @@ class RestApiRequestImpl {
                     o.setPositionSide(jsonObj.getString("positionSide"));
                     o.setStatus(jsonObj.getString("status"));
                     o.setStopPrice(jsonObj.getBigDecimal("stopPrice"));
+                    o.setClosePosition(jsonObj.getBoolean("closePosition"));
                     o.setSymbol(jsonObj.getString("symbol"));
+                    o.setPair(jsonObj.getString("pair"));
                     o.setTimeInForce(jsonObj.getString("timeInForce"));
                     o.setType(jsonObj.getString("type"));
                     o.setUpdateTime(jsonObj.getLong("updateTime"));
                     o.setWorkingType(jsonObj.getString("workingType"));
+                    o.setPriceProtect(jsonObj.getBoolean("priceProtect"));
                     listResult.add(o);
                 }
             });
@@ -705,9 +781,11 @@ class RestApiRequestImpl {
         request.jsonParser = (jsonWrapper -> {
             Order result = new Order();
             result.setClientOrderId(jsonWrapper.getString("clientOrderId"));
-            result.setCumQuote(jsonWrapper.getBigDecimal("cumQuote"));
+            result.setCumQty(jsonWrapper.getBigDecimal("cumQty"));
+            result.setCumBase(jsonWrapper.getBigDecimal("cumBase"));
             result.setExecutedQty(jsonWrapper.getBigDecimal("executedQty"));
             result.setOrderId(jsonWrapper.getLong("orderId"));
+            result.setAvgPrice(jsonWrapper.getBigDecimal("avgPrice"));
             result.setOrigQty(jsonWrapper.getBigDecimal("origQty"));
             result.setPrice(jsonWrapper.getBigDecimal("price"));
             result.setReduceOnly(jsonWrapper.getBoolean("reduceOnly"));
@@ -715,11 +793,17 @@ class RestApiRequestImpl {
             result.setPositionSide(jsonWrapper.getString("positionSide"));
             result.setStatus(jsonWrapper.getString("status"));
             result.setStopPrice(jsonWrapper.getBigDecimal("stopPrice"));
+            result.setClosePosition(jsonWrapper.getBoolean("closePosition"));
             result.setSymbol(jsonWrapper.getString("symbol"));
+            result.setPair(jsonWrapper.getString("pair"));
             result.setTimeInForce(jsonWrapper.getString("timeInForce"));
             result.setType(jsonWrapper.getString("type"));
+            result.setOrigType(jsonWrapper.getString("origType"));
+            result.setActivatePrice(jsonWrapper.getBigDecimal("activatePrice"));
+            result.setPriceRate(jsonWrapper.getBigDecimal("priceRate"));
             result.setUpdateTime(jsonWrapper.getLong("updateTime"));
             result.setWorkingType(jsonWrapper.getString("workingType"));
+            result.setPriceProtect(jsonWrapper.getBoolean("priceProtect"));
             return result;
         });
         return request;
@@ -828,7 +912,7 @@ class RestApiRequestImpl {
         request.jsonParser = (jsonWrapper -> {
             Order result = new Order();
             result.setClientOrderId(jsonWrapper.getString("clientOrderId"));
-            result.setCumQuote(jsonWrapper.getBigDecimal("cumQuote"));
+            result.setCumQty(jsonWrapper.getBigDecimal("cumQuote"));
             result.setExecutedQty(jsonWrapper.getBigDecimal("executedQty"));
             result.setOrderId(jsonWrapper.getLong("orderId"));
             result.setOrigQty(jsonWrapper.getBigDecimal("origQty"));
@@ -890,7 +974,7 @@ class RestApiRequestImpl {
                     Order o = new Order();
                     JSONObject jsonObj = (JSONObject) obj;
                     o.setClientOrderId(jsonObj.getString("clientOrderId"));
-                    o.setCumQuote(jsonObj.getBigDecimal("cumQuote"));
+                    o.setCumQty(jsonObj.getBigDecimal("cumQuote"));
                     o.setExecutedQty(jsonObj.getBigDecimal("executedQty"));
                     o.setOrderId(jsonObj.getLong("orderId"));
                     o.setOrigQty(jsonObj.getBigDecimal("origQty"));
@@ -924,7 +1008,7 @@ class RestApiRequestImpl {
         request.jsonParser = (jsonWrapper -> {
             Order result = new Order();
             result.setClientOrderId(jsonWrapper.getString("clientOrderId"));
-            result.setCumQuote(jsonWrapper.getBigDecimal("cumQuote"));
+            result.setCumQty(jsonWrapper.getBigDecimal("cumQuote"));
             result.setExecutedQty(jsonWrapper.getBigDecimal("executedQty"));
             result.setOrderId(jsonWrapper.getLong("orderId"));
             result.setOrigQty(jsonWrapper.getBigDecimal("origQty"));
@@ -956,7 +1040,7 @@ class RestApiRequestImpl {
             dataArray.forEach((item) -> {
                 Order element = new Order();
                 element.setClientOrderId(item.getString("clientOrderId"));
-                element.setCumQuote(item.getBigDecimal("cumQuote"));
+                element.setCumQty(item.getBigDecimal("cumQuote"));
                 element.setExecutedQty(item.getBigDecimal("executedQty"));
                 element.setOrderId(item.getLong("orderId"));
                 element.setOrigQty(item.getBigDecimal("origQty"));
@@ -994,7 +1078,7 @@ class RestApiRequestImpl {
             dataArray.forEach((item) -> {
                 Order element = new Order();
                 element.setClientOrderId(item.getString("clientOrderId"));
-                element.setCumQuote(item.getBigDecimal("cumQuote"));
+                element.setCumQty(item.getBigDecimal("cumQuote"));
                 element.setExecutedQty(item.getBigDecimal("executedQty"));
                 element.setOrderId(item.getLong("orderId"));
                 element.setOrigQty(item.getBigDecimal("origQty"));

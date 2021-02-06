@@ -10,6 +10,7 @@ import com.binance.client.SubscriptionErrorHandler;
 import com.binance.client.SubscriptionListener;
 import com.binance.client.impl.utils.Channels;
 import com.binance.client.model.enums.CandlestickInterval;
+import com.binance.client.model.enums.ContractType;
 import com.binance.client.model.event.AggregateTradeEvent;
 import com.binance.client.model.event.CandlestickEvent;
 import com.binance.client.model.event.LiquidationOrderEvent;
@@ -69,9 +70,9 @@ class WebsocketRequestImpl {
             result.setEventTime(jsonWrapper.getLong("E"));
             result.setSymbol(jsonWrapper.getString("s"));
             result.setMarkPrice(jsonWrapper.getBigDecimal("p"));
-            result.setIndexPrice(jsonWrapper.getBigDecimal("i"));
             result.setEstimatedSettlePrice(jsonWrapper.getBigDecimal("P"));
-            result.setFundingRate(jsonWrapper.getBigDecimal("r"));
+            if (!jsonWrapper.getString("r").equals(""))
+                result.setFundingRate(jsonWrapper.getBigDecimal("r"));
             result.setNextFundingTime(jsonWrapper.getLong("T"));
             return result;
         };
@@ -107,15 +108,127 @@ class WebsocketRequestImpl {
             result.setVolume(jsondata.getBigDecimal("v"));
             result.setNumTrades(jsondata.getLong("n"));
             result.setIsClosed(jsondata.getBoolean("x"));
-            result.setQuoteAssetVolume(jsondata.getBigDecimal("q"));
-            result.setTakerBuyBaseAssetVolume(jsondata.getBigDecimal("V"));
-            result.setTakerBuyQuoteAssetVolume(jsondata.getBigDecimal("Q"));
+            result.setBaseAssetVolume(jsondata.getBigDecimal("q"));
+            result.setTakerBuyQuoteAssetVolume(jsondata.getBigDecimal("V"));
+            result.setTakerBuyBaseAssetVolume(jsondata.getBigDecimal("Q"));
             result.setIgnore(jsondata.getLong("B"));
             return result;
         };
         return request;
     }
 
+    WebsocketRequest<CandlestickEvent> subscribeContinuousCandlestickEvent(String pair, ContractType contractType, CandlestickInterval interval,
+                                                                           SubscriptionListener<CandlestickEvent> subscriptionListener,
+                                                                           SubscriptionErrorHandler errorHandler) {
+        InputChecker.checker()
+                .shouldNotNull(pair, "pair")
+                .shouldNotNull(subscriptionListener, "listener");
+        WebsocketRequest<CandlestickEvent> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
+        request.name = "***Continuous Candlestick for " + pair + " " + contractType + "***";
+        request.connectionHandler = (connection) -> connection.send(Channels.continuousCandlestickChannel(pair, contractType, interval));
+
+        request.jsonParser = (jsonWrapper) -> {
+            CandlestickEvent result = new CandlestickEvent();
+            result.setEventType(jsonWrapper.getString("e"));
+            result.setEventTime(jsonWrapper.getLong("E"));
+            result.setPair(jsonWrapper.getString("ps"));
+            result.setContractType(jsonWrapper.getString("ct"));
+            JsonWrapper jsondata = jsonWrapper.getJsonObject("k");
+            result.setStartTime(jsondata.getLong("t"));
+            result.setCloseTime(jsondata.getLong("T"));
+            result.setInterval(jsondata.getString("i"));
+            result.setFirstTradeId(jsondata.getLong("f"));
+            result.setLastTradeId(jsondata.getLong("L"));
+            result.setOpen(jsondata.getBigDecimal("o"));
+            result.setClose(jsondata.getBigDecimal("c"));
+            result.setHigh(jsondata.getBigDecimal("h"));
+            result.setLow(jsondata.getBigDecimal("l"));
+            result.setVolume(jsondata.getBigDecimal("v"));
+            result.setNumTrades(jsondata.getLong("n"));
+            result.setIsClosed(jsondata.getBoolean("x"));
+            result.setBaseAssetVolume(jsondata.getBigDecimal("q"));
+            result.setTakerBuyQuoteAssetVolume(jsondata.getBigDecimal("V"));
+            result.setTakerBuyBaseAssetVolume(jsondata.getBigDecimal("Q"));
+            result.setIgnore(jsondata.getLong("B"));
+            return result;
+        };
+        return request;
+    }
+
+    WebsocketRequest<CandlestickEvent> subscribeIndexPriceCandlestickEvent(String pair, CandlestickInterval interval,
+                                                                           SubscriptionListener<CandlestickEvent> subscriptionListener,
+                                                                           SubscriptionErrorHandler errorHandler) {
+        InputChecker.checker()
+                .shouldNotNull(pair, "pair")
+                .shouldNotNull(subscriptionListener, "listener");
+        WebsocketRequest<CandlestickEvent> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
+        request.name = "***Index Price Candlestick for " + pair + "***";
+        request.connectionHandler = (connection) -> connection.send(Channels.indexPriceCandlestickChannel(pair, interval));
+
+        request.jsonParser = (jsonWrapper) -> {
+            CandlestickEvent result = new CandlestickEvent();
+            result.setEventType(jsonWrapper.getString("e"));
+            result.setEventTime(jsonWrapper.getLong("E"));
+            result.setPair(jsonWrapper.getString("ps"));
+            JsonWrapper jsondata = jsonWrapper.getJsonObject("k");
+            result.setStartTime(jsondata.getLong("t"));
+            result.setCloseTime(jsondata.getLong("T"));
+            result.setInterval(jsondata.getString("i"));
+            result.setFirstTradeId(jsondata.getLong("f"));
+            result.setLastTradeId(jsondata.getLong("L"));
+            result.setOpen(jsondata.getBigDecimal("o"));
+            result.setClose(jsondata.getBigDecimal("c"));
+            result.setHigh(jsondata.getBigDecimal("h"));
+            result.setLow(jsondata.getBigDecimal("l"));
+            result.setVolume(jsondata.getBigDecimal("v"));
+            result.setNumTrades(jsondata.getLong("n"));
+            result.setIsClosed(jsondata.getBoolean("x"));
+            result.setBaseAssetVolume(jsondata.getBigDecimal("q"));
+            result.setTakerBuyQuoteAssetVolume(jsondata.getBigDecimal("V"));
+            result.setTakerBuyBaseAssetVolume(jsondata.getBigDecimal("Q"));
+            result.setIgnore(jsondata.getLong("B"));
+            return result;
+        };
+        return request;
+    }
+
+    WebsocketRequest<CandlestickEvent> subscribeMarkPriceCandlestickEvent(String symbol, CandlestickInterval interval,
+                                                                 SubscriptionListener<CandlestickEvent> subscriptionListener,
+                                                                 SubscriptionErrorHandler errorHandler) {
+        InputChecker.checker()
+                .shouldNotNull(symbol, "symbol")
+                .shouldNotNull(subscriptionListener, "listener");
+        WebsocketRequest<CandlestickEvent> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
+        request.name = "***Mark Price Candlestick for " + symbol + "***";
+        request.connectionHandler = (connection) -> connection.send(Channels.markPricecandlestickChannel(symbol, interval));
+
+        request.jsonParser = (jsonWrapper) -> {
+            CandlestickEvent result = new CandlestickEvent();
+            result.setEventType(jsonWrapper.getString("e"));
+            result.setEventTime(jsonWrapper.getLong("E"));
+            result.setPair(jsonWrapper.getString("ps"));
+            JsonWrapper jsondata = jsonWrapper.getJsonObject("k");
+            result.setStartTime(jsondata.getLong("t"));
+            result.setCloseTime(jsondata.getLong("T"));
+            result.setSymbol(jsondata.getString("s"));
+            result.setInterval(jsondata.getString("i"));
+            result.setFirstTradeId(jsondata.getLong("f"));
+            result.setLastTradeId(jsondata.getLong("L"));
+            result.setOpen(jsondata.getBigDecimal("o"));
+            result.setClose(jsondata.getBigDecimal("c"));
+            result.setHigh(jsondata.getBigDecimal("h"));
+            result.setLow(jsondata.getBigDecimal("l"));
+            result.setVolume(jsondata.getBigDecimal("v"));
+            result.setNumTrades(jsondata.getLong("n"));
+            result.setIsClosed(jsondata.getBoolean("x"));
+            result.setBaseAssetVolume(jsondata.getBigDecimal("q"));
+            result.setTakerBuyQuoteAssetVolume(jsondata.getBigDecimal("V"));
+            result.setTakerBuyBaseAssetVolume(jsondata.getBigDecimal("Q"));
+            result.setIgnore(jsondata.getLong("B"));
+            return result;
+        };
+        return request;
+    }
     WebsocketRequest<SymbolMiniTickerEvent> subscribeSymbolMiniTickerEvent(String symbol,
             SubscriptionListener<SymbolMiniTickerEvent> subscriptionListener,
             SubscriptionErrorHandler errorHandler) {
@@ -131,12 +244,13 @@ class WebsocketRequestImpl {
             result.setEventType(jsonWrapper.getString("e"));
             result.setEventTime(jsonWrapper.getLong("E"));
             result.setSymbol(jsonWrapper.getString("s"));
+            result.setPair(jsonWrapper.getString("ps"));
             result.setOpen(jsonWrapper.getBigDecimal("o"));
             result.setClose(jsonWrapper.getBigDecimal("c"));
             result.setHigh(jsonWrapper.getBigDecimal("h"));
             result.setLow(jsonWrapper.getBigDecimal("l"));
-            result.setTotalTradedBaseAssetVolume(jsonWrapper.getBigDecimal("v"));
-            result.setTotalTradedQuoteAssetVolume(jsonWrapper.getBigDecimal("q"));
+            result.setTotalTradedQuoteAssetVolume(jsonWrapper.getBigDecimal("v"));
+            result.setTotalTradedBaseAssetVolume(jsonWrapper.getBigDecimal("q"));
             return result;
         };
         return request;
@@ -159,12 +273,13 @@ class WebsocketRequestImpl {
                 element.setEventType(item.getString("e"));
                 element.setEventTime(item.getLong("E"));
                 element.setSymbol(item.getString("s"));
+                element.setPair(item.getString("ps"));
                 element.setOpen(item.getBigDecimal("o"));
                 element.setClose(item.getBigDecimal("c"));
                 element.setHigh(item.getBigDecimal("h"));
                 element.setLow(item.getBigDecimal("l"));
-                element.setTotalTradedBaseAssetVolume(item.getBigDecimal("v"));
-                element.setTotalTradedQuoteAssetVolume(item.getBigDecimal("q"));
+                element.setTotalTradedQuoteAssetVolume(item.getBigDecimal("v"));
+                element.setTotalTradedBaseAssetVolume(item.getBigDecimal("q"));
                 result.add(element);
             });
             return result;
@@ -187,6 +302,7 @@ class WebsocketRequestImpl {
             result.setEventType(jsonWrapper.getString("e"));
             result.setEventTime(jsonWrapper.getLong("E"));
             result.setSymbol(jsonWrapper.getString("s"));
+            result.setPair(jsonWrapper.getString("ps"));
             result.setPriceChange(jsonWrapper.getBigDecimal("p"));
             result.setPriceChangePercent(jsonWrapper.getBigDecimal("P"));
             result.setWeightedAvgPrice(jsonWrapper.getBigDecimal("w"));
@@ -195,8 +311,8 @@ class WebsocketRequestImpl {
             result.setOpen(jsonWrapper.getBigDecimal("o"));
             result.setHigh(jsonWrapper.getBigDecimal("h"));
             result.setLow(jsonWrapper.getBigDecimal("l"));
-            result.setTotalTradedBaseAssetVolume(jsonWrapper.getBigDecimal("v"));
-            result.setTotalTradedQuoteAssetVolume(jsonWrapper.getBigDecimal("q"));
+            result.setTotalTradedQuoteAssetVolume(jsonWrapper.getBigDecimal("v"));
+            result.setTotalTradedBaseAssetVolume(jsonWrapper.getBigDecimal("q"));
             result.setOpenTime(jsonWrapper.getLong("O"));
             result.setCloseTime(jsonWrapper.getLong("C"));
             result.setFirstId(jsonWrapper.getLong("F"));
@@ -224,6 +340,7 @@ class WebsocketRequestImpl {
                 element.setEventType(item.getString("e"));
                 element.setEventTime(item.getLong("E"));
                 element.setSymbol(item.getString("s"));
+                element.setPair(item.getString("ps"));
                 element.setPriceChange(item.getBigDecimal("p"));
                 element.setPriceChangePercent(item.getBigDecimal("P"));
                 element.setWeightedAvgPrice(item.getBigDecimal("w"));
@@ -232,8 +349,8 @@ class WebsocketRequestImpl {
                 element.setOpen(item.getBigDecimal("o"));
                 element.setHigh(item.getBigDecimal("h"));
                 element.setLow(item.getBigDecimal("l"));
-                element.setTotalTradedBaseAssetVolume(item.getBigDecimal("v"));
-                element.setTotalTradedQuoteAssetVolume(item.getBigDecimal("q"));
+                element.setTotalTradedQuoteAssetVolume(item.getBigDecimal("v"));
+                element.setTotalTradedBaseAssetVolume(item.getBigDecimal("q"));
                 element.setOpenTime(item.getLong("O"));
                 element.setCloseTime(item.getLong("C"));
                 element.setFirstId(item.getLong("F"));
@@ -261,6 +378,7 @@ class WebsocketRequestImpl {
             SymbolBookTickerEvent result = new SymbolBookTickerEvent();
             result.setOrderBookUpdateId(jsonWrapper.getLong("u"));
             result.setSymbol(jsonWrapper.getString("s"));
+            result.setPair(jsonWrapper.getString("ps"));
             result.setBestBidPrice(jsonWrapper.getBigDecimal("b"));
             result.setBestBidQty(jsonWrapper.getBigDecimal("B"));
             result.setBestAskPrice(jsonWrapper.getBigDecimal("a"));
@@ -283,6 +401,7 @@ class WebsocketRequestImpl {
             SymbolBookTickerEvent result = new SymbolBookTickerEvent();
             result.setOrderBookUpdateId(jsonWrapper.getLong("u"));
             result.setSymbol(jsonWrapper.getString("s"));
+            result.setPair(jsonWrapper.getString("ps"));
             result.setBestBidPrice(jsonWrapper.getBigDecimal("b"));
             result.setBestBidQty(jsonWrapper.getBigDecimal("B"));
             result.setBestAskPrice(jsonWrapper.getBigDecimal("a"));
@@ -308,6 +427,7 @@ class WebsocketRequestImpl {
             result.setEventTime(jsonWrapper.getLong("E"));
             JsonWrapper jsondata = jsonWrapper.getJsonObject("o");
             result.setSymbol(jsondata.getString("s"));
+            result.setPair(jsondata.getString("ps"));
             result.setSide(jsondata.getString("S"));
             result.setType(jsondata.getString("o"));
             result.setTimeInForce(jsondata.getString("f"));
@@ -338,6 +458,7 @@ class WebsocketRequestImpl {
             result.setEventTime(jsonWrapper.getLong("E"));
             JsonWrapper jsondata = jsonWrapper.getJsonObject("o");
             result.setSymbol(jsondata.getString("s"));
+            result.setPair(jsondata.getString("ps"));
             result.setSide(jsondata.getString("S"));
             result.setType(jsondata.getString("o"));
             result.setTimeInForce(jsondata.getString("f"));
@@ -370,6 +491,7 @@ class WebsocketRequestImpl {
             result.setEventTime(jsonWrapper.getLong("E"));
             result.setTransactionTime(jsonWrapper.getLong("T"));
             result.setSymbol(jsonWrapper.getString("s"));
+            result.setPair(jsonWrapper.getString("ps"));
             result.setFirstUpdateId(jsonWrapper.getLong("U"));
             result.setLastUpdateId(jsonWrapper.getLong("u"));
             result.setLastUpdateIdInlastStream(jsonWrapper.getLong("pu"));
@@ -415,6 +537,7 @@ class WebsocketRequestImpl {
             result.setEventTime(jsonWrapper.getLong("E"));
             result.setTransactionTime(jsonWrapper.getLong("T"));
             result.setSymbol(jsonWrapper.getString("s"));
+            result.setPair(jsonWrapper.getString("ps"));
             result.setFirstUpdateId(jsonWrapper.getLong("U"));
             result.setLastUpdateId(jsonWrapper.getLong("u"));
             result.setLastUpdateIdInlastStream(jsonWrapper.getLong("pu"));

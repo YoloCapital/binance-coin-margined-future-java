@@ -9,7 +9,7 @@ public class SubscribeSymbolTicker {
 
         SubscriptionClient client = SubscriptionClient.create(PrivateConfig.API_KEY, PrivateConfig.SECRET_KEY);
    
-        client.subscribeSymbolTickerEvent("btcusdt", ((event) -> {
+        client.subscribeSymbolTickerEvent("btcusd_perp", ((event) -> {
             System.out.println(event);
             client.unsubscribeAll();
         }), null);

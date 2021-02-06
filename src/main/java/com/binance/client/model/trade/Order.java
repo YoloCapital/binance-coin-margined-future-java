@@ -9,11 +9,15 @@ public class Order {
 
     private String clientOrderId;
 
-    private BigDecimal cumQuote;
+    private BigDecimal cumQty;
+
+    private BigDecimal cumBase;
 
     private BigDecimal executedQty;
 
     private Long orderId;
+
+    private BigDecimal avgPrice;
 
     private BigDecimal origQty;
 
@@ -29,15 +33,27 @@ public class Order {
 
     private BigDecimal stopPrice;
 
+    private Boolean closePosition;
+
     private String symbol;
+
+    private String pair;
 
     private String timeInForce;
 
     private String type;
 
+    private String origType;
+
+    private BigDecimal activatePrice;
+
+    private BigDecimal priceRate;
+
     private Long updateTime;
 
     private String workingType;
+
+    private Boolean priceProtect;
 
     public String getClientOrderId() {
         return clientOrderId;
@@ -47,12 +63,20 @@ public class Order {
         this.clientOrderId = clientOrderId;
     }
 
-    public BigDecimal getCumQuote() {
-        return cumQuote;
+    public BigDecimal getCumQty() {
+        return cumQty;
     }
 
-    public void setCumQuote(BigDecimal cumQuote) {
-        this.cumQuote = cumQuote;
+    public void setCumQty(BigDecimal cumQty) {
+        this.cumQty = cumQty;
+    }
+
+    public BigDecimal getCumBase() {
+        return cumBase;
+    }
+
+    public void setCumBase(BigDecimal cumBase) {
+        this.cumBase = cumBase;
     }
 
     public BigDecimal getExecutedQty() {
@@ -69,6 +93,14 @@ public class Order {
 
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
+    }
+
+    public BigDecimal getAvgPrice() {
+        return avgPrice;
+    }
+
+    public void setAvgPrice(BigDecimal avgPrice) {
+        this.avgPrice = avgPrice;
     }
 
     public BigDecimal getOrigQty() {
@@ -127,12 +159,28 @@ public class Order {
         this.stopPrice = stopPrice;
     }
 
+    public Boolean getClosePosition() {
+        return closePosition;
+    }
+
+    public void setClosePosition(Boolean closePosition) {
+        this.closePosition = closePosition;
+    }
+
     public String getSymbol() {
         return symbol;
     }
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
+    }
+
+    public String getPair() {
+        return pair;
+    }
+
+    public void setPair(String pair) {
+        this.pair = pair;
     }
 
     public String getTimeInForce() {
@@ -151,6 +199,30 @@ public class Order {
         this.type = type;
     }
 
+    public String getOrigType() {
+        return origType;
+    }
+
+    public void setOrigType(String origType) {
+        this.origType = origType;
+    }
+
+    public BigDecimal getActivatePrice() {
+        return activatePrice;
+    }
+
+    public void setActivatePrice(BigDecimal activatePrice) {
+        this.activatePrice = activatePrice;
+    }
+
+    public BigDecimal getPriceRate() {
+        return priceRate;
+    }
+
+    public void setPriceRate(BigDecimal priceRate) {
+        this.priceRate = priceRate;
+    }
+
     public Long getUpdateTime() {
         return updateTime;
     }
@@ -167,13 +239,28 @@ public class Order {
         this.workingType = workingType;
     }
 
+    public Boolean getPriceProtect() {
+        return priceProtect;
+    }
+
+    public void setPriceProtect(Boolean priceProtect) {
+        this.priceProtect = priceProtect;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE)
-                .append("clientOrderId", clientOrderId).append("cumQuote", cumQuote).append("executedQty", executedQty)
-                .append("orderId", orderId).append("origQty", origQty).append("price", price)
-                .append("reduceOnly", reduceOnly).append("side", side).append("positionSide", positionSide).append("status", status)
-                .append("stopPrice", stopPrice).append("symbol", symbol).append("timeInForce", timeInForce)
-                .append("type", type).append("updateTime", updateTime).append("workingType", workingType).toString();
+                .append("clientOrderId", clientOrderId).append("cumQty", cumQty)
+                .append("cumBase", cumBase).append("executedQty", executedQty)
+                .append("orderId", orderId).append("avgPrice", avgPrice)
+                .append("origQty", origQty).append("price", price)
+                .append("reduceOnly", reduceOnly).append("side", side)
+                .append("positionSide", positionSide).append("status", status)
+                .append("stopPrice", stopPrice).append("symbol", symbol)
+                .append("pair", pair).append("timeInForce", timeInForce)
+                .append("type", type).append("origType", origType)
+                .append("activatePrice", activatePrice).append("priceRate", priceRate)
+                .append("updateTime", updateTime).append("workingType", workingType)
+                .append("priceProtect", priceProtect).toString();
     }
 }

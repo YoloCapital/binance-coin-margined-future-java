@@ -98,6 +98,13 @@ public interface SyncRequestClient {
     List<Candlestick> getCandlestick(String symbol, CandlestickInterval interval, Long startTime, Long endTime, Integer limit);
 
     /**
+     * Get kline/candlestick bars for a specific contract type.
+     *
+     * @return Kline/candlestick bars for a specific contract type.
+     */
+    List<Candlestick> getContinuousCandlestick(String pair, ContractType contractType, CandlestickInterval interval, Long startTime, Long endTime, Integer limit);
+
+    /**
      * Get kline/candlestick bars for a symbol.
      *
      * @return Kline/candlestick bars for a symbol.
@@ -116,7 +123,7 @@ public interface SyncRequestClient {
      *
      * @return Mark price for a symbol.
      */
-    List<MarkPrice> getMarkPrice(String symbol);
+    List<MarkPrice> getMarkPrice(String symbol, String pair);
 
     /**
      * Get funding rate history.
@@ -152,6 +159,8 @@ public interface SyncRequestClient {
      * @return All liquidation orders.
      */
     List<LiquidationOrder> getLiquidationOrders(String symbol, String pair, Long startTime, Long endTime, Integer limit);
+
+    List<Basis> getBasis(String pair, ContractType contractType, CandlestickInterval period, Long startTime, Long endTime, Integer limit);
 
     /**
      * Place new orders

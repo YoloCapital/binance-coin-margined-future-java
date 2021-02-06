@@ -17,6 +17,8 @@ public class OrderBookEvent {
 
     private String symbol;
 
+    private String pair;
+
     private Long firstUpdateId;
 
     private Long lastUpdateId;
@@ -57,6 +59,14 @@ public class OrderBookEvent {
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
+    }
+
+    public String getPair() {
+        return pair;
+    }
+
+    public void setPair(String pair) {
+        this.pair = pair;
     }
 
     public Long getFirstUpdateId() {
@@ -102,7 +112,7 @@ public class OrderBookEvent {
     @Override
     public String toString() {
         return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("eventType", eventType)
-                .append("eventTime", eventTime).append("transactionTime", transactionTime).append("symbol", symbol)
+                .append("eventTime", eventTime).append("transactionTime", transactionTime).append("symbol", symbol).append("pair", pair)
                 .append("firstUpdateId", firstUpdateId).append("lastUpdateId", lastUpdateId)
                 .append("lastUpdateIdInlastStream", lastUpdateIdInlastStream).append("bids", bids).append("asks", asks)
                 .toString();

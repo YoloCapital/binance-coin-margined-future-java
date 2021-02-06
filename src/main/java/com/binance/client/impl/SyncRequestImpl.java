@@ -51,6 +51,12 @@ public class SyncRequestImpl implements SyncRequestClient {
     }
 
     @Override
+    public List<Candlestick> getContinuousCandlestick(String pair, ContractType contractType,
+                                                      CandlestickInterval interval, Long startTime, Long endTime, Integer limit) {
+        return RestApiInvoker.callSync(requestImpl.getContinuousCandlestick(pair, contractType, interval, startTime, endTime, limit));
+    }
+
+    @Override
     public List<Candlestick> getIndexPriceCandlestick(String pair, CandlestickInterval interval, Long startTime,
                                             Long endTime, Integer limit) {
         return RestApiInvoker.callSync(requestImpl.getIndexPriceCandlestick(pair, interval, startTime, endTime, limit));
@@ -63,8 +69,8 @@ public class SyncRequestImpl implements SyncRequestClient {
     }
 
     @Override
-    public List<MarkPrice> getMarkPrice(String symbol) {
-        return RestApiInvoker.callSync(requestImpl.getMarkPrice(symbol));
+    public List<MarkPrice> getMarkPrice(String symbol, String pair) {
+        return RestApiInvoker.callSync(requestImpl.getMarkPrice(symbol, pair));
     }
     
     @Override
@@ -91,6 +97,12 @@ public class SyncRequestImpl implements SyncRequestClient {
     public List<LiquidationOrder> getLiquidationOrders(String symbol, String pair, Long startTime, Long endTime, Integer limit) {
         return RestApiInvoker.callSync(requestImpl.getLiquidationOrders(symbol, pair, startTime, endTime, limit));
     }
+
+    @Override
+    public List<Basis> getBasis(String pair, ContractType contractType, CandlestickInterval period, Long startTime, Long endTime, Integer limit) {
+        return RestApiInvoker.callSync(requestImpl.getBasis(pair, contractType, period, startTime, endTime, limit));
+    }
+
 
     @Override
     public List<Object> postBatchOrders(String batchOrders) {

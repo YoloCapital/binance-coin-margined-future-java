@@ -13,6 +13,8 @@ public class LiquidationOrderEvent {
 
     private String symbol;
 
+    private String pair;
+
     private String side;
 
     private String type;
@@ -55,6 +57,14 @@ public class LiquidationOrderEvent {
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
+    }
+
+    public String getPair() {
+        return pair;
+    }
+
+    public void setPair(String pair) {
+        this.pair = pair;
     }
 
     public String getSide() {
@@ -140,7 +150,7 @@ public class LiquidationOrderEvent {
     @Override
     public String toString() {
         return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("eventType", eventType)
-                .append("eventTime", eventTime).append("symbol", symbol).append("side", side).append("type", type)
+                .append("eventTime", eventTime).append("symbol", symbol).append("pair", pair).append("side", side).append("type", type)
                 .append("timeInForce", timeInForce).append("origQty", origQty).append("price", price)
                 .append("averagePrice", averagePrice).append("orderStatus", orderStatus)
                 .append("lastFilledQty", lastFilledQty).append("lastFilledAccumulatedQty", lastFilledAccumulatedQty)

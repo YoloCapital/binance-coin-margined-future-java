@@ -5,6 +5,7 @@ import com.binance.client.SubscriptionErrorHandler;
 import com.binance.client.SubscriptionListener;
 import com.binance.client.SubscriptionOptions;
 import com.binance.client.model.enums.CandlestickInterval;
+import com.binance.client.model.enums.ContractType;
 import com.binance.client.model.event.AggregateTradeEvent;
 import com.binance.client.model.event.CandlestickEvent;
 import com.binance.client.model.event.LiquidationOrderEvent;
@@ -88,6 +89,31 @@ public class WebSocketStreamClientImpl implements SubscriptionClient {
             SubscriptionErrorHandler errorHandler) {
         createConnection(
                 requestImpl.subscribeCandlestickEvent(symbol, interval, subscriptionListener, errorHandler));
+    }
+
+    @Override
+    public void subscribeContinuousCandlestickEvent(String pair, ContractType contractType,
+                                                    CandlestickInterval interval,
+                                                    SubscriptionListener<CandlestickEvent> subscriptionListener,
+                                                    SubscriptionErrorHandler errorHandler) {
+        createConnection(
+                requestImpl.subscribeContinuousCandlestickEvent(pair, contractType, interval, subscriptionListener, errorHandler));
+    }
+
+    @Override
+    public void subscribeIndexPriceCandlestickEvent(String pair, CandlestickInterval interval,
+                                                    SubscriptionListener<CandlestickEvent> subscriptionListener,
+                                                    SubscriptionErrorHandler errorHandler) {
+        createConnection(
+                requestImpl.subscribeIndexPriceCandlestickEvent(pair, interval, subscriptionListener, errorHandler));
+    }
+
+    @Override
+    public void subscribeMarkPriceCandlestickEvent(String symbol, CandlestickInterval interval,
+                                                   SubscriptionListener<CandlestickEvent> subscriptionListener,
+                                                   SubscriptionErrorHandler errorHandler) {
+        createConnection(
+                requestImpl.subscribeMarkPriceCandlestickEvent(symbol, interval, subscriptionListener, errorHandler));
     }
 
     @Override

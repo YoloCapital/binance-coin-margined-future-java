@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.binance.client.impl.BinanceApiInternalFactory;
 import com.binance.client.model.enums.CandlestickInterval;
+import com.binance.client.model.enums.ContractType;
 import com.binance.client.model.event.AggregateTradeEvent;
 import com.binance.client.model.event.CandlestickEvent;
 import com.binance.client.model.event.LiquidationOrderEvent;
@@ -98,6 +99,49 @@ public interface SubscriptionClient {
      *                     or error happen between client and Binance server.
      */
     void subscribeCandlestickEvent(String symbol, CandlestickInterval interval,
+                                   SubscriptionListener<CandlestickEvent> callback, SubscriptionErrorHandler errorHandler);
+
+    /**
+     * Subscribe candlestick event. If the candlestick is updated,
+     * server will send the data to client and onReceive in callback will be called.
+     *
+     * @param pair         The pair, like "btcusd".
+     * @param contractType The contract type, like "perpetual".
+     * @param interval     The candlestick interval, like "ONE_MINUTE".
+     * @param callback     The implementation is required. onReceive will be called
+     *                     if receive server's update.
+     * @param errorHandler The error handler will be called if subscription failed
+     *                     or error happen between client and Binance server.
+     */
+    void subscribeContinuousCandlestickEvent(String pair, ContractType contractType, CandlestickInterval interval,
+                                             SubscriptionListener<CandlestickEvent> callback, SubscriptionErrorHandler errorHandler);
+
+    /**
+     * Subscribe candlestick event. If the candlestick is updated,
+     * server will send the data to client and onReceive in callback will be called.
+     *
+     * @param pair         The pair, like "btcusd".
+     * @param interval     The candlestick interval, like "ONE_MINUTE".
+     * @param callback     The implementation is required. onReceive will be called
+     *                     if receive server's update.
+     * @param errorHandler The error handler will be called if subscription failed
+     *                     or error happen between client and Binance server.
+     */
+    void subscribeIndexPriceCandlestickEvent(String pair, CandlestickInterval interval,
+                                   SubscriptionListener<CandlestickEvent> callback, SubscriptionErrorHandler errorHandler);
+
+    /**
+     * Subscribe candlestick event. If the candlestick is updated,
+     * server will send the data to client and onReceive in callback will be called.
+     *
+     * @param symbol      The symbol, like "btcusdt".
+     * @param interval      The candlestick interval, like "ONE_MINUTE".
+     * @param callback     The implementation is required. onReceive will be called
+     *                     if receive server's update.
+     * @param errorHandler The error handler will be called if subscription failed
+     *                     or error happen between client and Binance server.
+     */
+    void subscribeMarkPriceCandlestickEvent(String symbol, CandlestickInterval interval,
             SubscriptionListener<CandlestickEvent> callback, SubscriptionErrorHandler errorHandler);
 
     /**
