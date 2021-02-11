@@ -9,7 +9,7 @@ public class Leverage {
 
     private BigDecimal leverage;
 
-    private Double maxNotionalValue;
+    private Double maxQty;
 
     private String symbol;
 
@@ -21,12 +21,12 @@ public class Leverage {
         this.leverage = leverage;
     }
 
-    public Double getMaxNotionalValue() {
-        return maxNotionalValue;
+    public Double getMaxQty() {
+        return maxQty;
     }
 
-    public void setMaxNotionalValue(Double maxNotionalValue) {
-        this.maxNotionalValue = maxNotionalValue;
+    public void setMaxQty(Double maxQty) {
+        this.maxQty = maxQty;
     }
 
     public String getSymbol() {
@@ -40,6 +40,6 @@ public class Leverage {
     @Override
     public String toString() {
         return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("leverage", leverage)
-                .append("maxNotionalValue", maxNotionalValue).append("symbol", symbol).toString();
+                .append("maxQty", maxQty).append("symbol", symbol).toString();
     }
 }

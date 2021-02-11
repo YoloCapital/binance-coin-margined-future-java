@@ -25,7 +25,7 @@ public class Position {
 
     private String entryPrice;
 
-    private String maxNotional;
+    private String maxQty;
 
     private String positionSide;
 
@@ -101,12 +101,12 @@ public class Position {
         this.entryPrice = entryPrice;
     }
 
-    public String getMaxNotional() {
-        return maxNotional;
+    public String getMaxQty() {
+        return maxQty;
     }
 
-    public void setMaxNotional(String maxNotional) {
-        this.maxNotional = maxNotional;
+    public void setMaxQty(String maxQty) {
+        this.maxQty = maxQty;
     }
 
     public String getPositionSide() {
@@ -124,7 +124,7 @@ public class Position {
                 .append("openOrderInitialMargin", openOrderInitialMargin)
                 .append("positionInitialMargin", positionInitialMargin).append("symbol", symbol)
                 .append("unrealizedProfit", unrealizedProfit).append("entryPrice", entryPrice)
-                .append("maxNotional", maxNotional).append("positionSide", positionSide)
+                .append("maxQty", maxQty).append("positionSide", positionSide)
                 .append("isolated", isolated).toString();
     }
 }

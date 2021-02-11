@@ -218,7 +218,12 @@ public class SyncRequestImpl implements SyncRequestClient {
     public List<Income> getIncomeHistory(String symbol, IncomeType incomeType, Long startTime, Long endTime, Integer limit) {
         return RestApiInvoker.callSync(requestImpl.getIncomeHistory(symbol, incomeType, startTime, endTime, limit));
     }
-    
+
+    @Override
+    public CommissionRate getCommissionRate(String symbol) {
+        return RestApiInvoker.callSync(requestImpl.getCommissionRate(symbol));
+    }
+
     @Override
     public String startUserDataStream() {
         return RestApiInvoker.callSync(requestImpl.startUserDataStream());

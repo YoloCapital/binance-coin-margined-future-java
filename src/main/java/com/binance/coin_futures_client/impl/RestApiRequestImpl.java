@@ -1165,14 +1165,6 @@ class RestApiRequestImpl {
             result.setCanTrade(jsonWrapper.getBoolean("canTrade"));
             result.setCanWithdraw(jsonWrapper.getBoolean("canWithdraw"));
             result.setFeeTier(jsonWrapper.getBigDecimal("feeTier"));
-            result.setMaxWithdrawAmount(jsonWrapper.getBigDecimal("maxWithdrawAmount"));
-            result.setTotalInitialMargin(jsonWrapper.getBigDecimal("totalInitialMargin"));
-            result.setTotalMaintMargin(jsonWrapper.getBigDecimal("totalMaintMargin"));
-            result.setTotalMarginBalance(jsonWrapper.getBigDecimal("totalMarginBalance"));
-            result.setTotalOpenOrderInitialMargin(jsonWrapper.getBigDecimal("totalOpenOrderInitialMargin"));
-            result.setTotalPositionInitialMargin(jsonWrapper.getBigDecimal("totalPositionInitialMargin"));
-            result.setTotalUnrealizedProfit(jsonWrapper.getBigDecimal("totalUnrealizedProfit"));
-            result.setTotalWalletBalance(jsonWrapper.getBigDecimal("totalWalletBalance"));
             result.setUpdateTime(jsonWrapper.getLong("updateTime"));
 
             List<Asset> assetList = new LinkedList<>();
@@ -1180,13 +1172,17 @@ class RestApiRequestImpl {
             assetArray.forEach((item) -> {
                 Asset element = new Asset();
                 element.setAsset(item.getString("asset"));
-                element.setInitialMargin(item.getBigDecimal("initialMargin"));
-                element.setMaintMargin(item.getBigDecimal("maintMargin"));
-                element.setMarginBalance(item.getBigDecimal("marginBalance"));
-                element.setMaxWithdrawAmount(item.getBigDecimal("maxWithdrawAmount"));
-                element.setOpenOrderInitialMargin(item.getBigDecimal("openOrderInitialMargin"));
-                element.setPositionInitialMargin(item.getBigDecimal("positionInitialMargin"));
+                element.setWalletBalance(item.getBigDecimal("walletBalance"));
                 element.setUnrealizedProfit(item.getBigDecimal("unrealizedProfit"));
+                element.setMarginBalance(item.getBigDecimal("marginBalance"));
+                element.setMaintMargin(item.getBigDecimal("maintMargin"));
+                element.setInitialMargin(item.getBigDecimal("initialMargin"));
+                element.setPositionInitialMargin(item.getBigDecimal("positionInitialMargin"));
+                element.setOpenOrderInitialMargin(item.getBigDecimal("openOrderInitialMargin"));
+                element.setMaxWithdrawAmount(item.getBigDecimal("maxWithdrawAmount"));
+                element.setCrossWalletBalance(item.getBigDecimal("crossWalletBalance"));
+                element.setCrossUnPnl(item.getBigDecimal("crossUnPnl"));
+                element.setAvailableBalance(item.getBigDecimal("availableBalance"));
                 assetList.add(element);
             });
             result.setAssets(assetList);
@@ -1195,17 +1191,17 @@ class RestApiRequestImpl {
             JsonWrapperArray positionArray = jsonWrapper.getJsonArray("positions");
             positionArray.forEach((item) -> {
                 Position element = new Position();
-                element.setIsolated(item.getBoolean("isolated"));
-                element.setLeverage(item.getBigDecimal("leverage"));
+                element.setSymbol(item.getString("symbol"));
                 element.setInitialMargin(item.getBigDecimal("initialMargin"));
                 element.setMaintMargin(item.getBigDecimal("maintMargin"));
-                element.setOpenOrderInitialMargin(item.getBigDecimal("openOrderInitialMargin"));
-                element.setPositionInitialMargin(item.getBigDecimal("positionInitialMargin"));
-                element.setSymbol(item.getString("symbol"));
                 element.setUnrealizedProfit(item.getBigDecimal("unrealizedProfit"));
-                element.setEntryPrice(item.getString("entryPrice"));
-                element.setMaxNotional(item.getString("maxNotional"));
+                element.setPositionInitialMargin(item.getBigDecimal("positionInitialMargin"));
+                element.setOpenOrderInitialMargin(item.getBigDecimal("openOrderInitialMargin"));
+                element.setLeverage(item.getBigDecimal("leverage"));
+                element.setIsolated(item.getBoolean("isolated"));
                 element.setPositionSide(item.getString("positionSide"));
+                element.setEntryPrice(item.getString("entryPrice"));
+                element.setMaxQty(item.getString("maxQty"));
                 positionList.add(element);
             });
             result.setPositions(positionList);
@@ -1271,7 +1267,7 @@ class RestApiRequestImpl {
                 element.setSymbol(item.getString("symbol"));
                 element.setUnrealizedProfit(item.getBigDecimal("unrealizedProfit"));
                 element.setEntryPrice(item.getString("entryPrice"));
-                element.setMaxNotional(item.getString("maxNotional"));
+                element.setMaxQty(item.getString("maxNotional"));
                 element.setPositionSide(item.getString("positionSide"));
                 positionList.add(element);
             });
@@ -1291,10 +1287,10 @@ class RestApiRequestImpl {
         request.jsonParser = (jsonWrapper -> {
             Leverage result = new Leverage();
             result.setLeverage(jsonWrapper.getBigDecimal("leverage"));
-            if(jsonWrapper.getString("maxNotionalValue").equals("INF")) {
-                result.setMaxNotionalValue(Double.POSITIVE_INFINITY);
+            if(jsonWrapper.getString("maxQty").equals("INF")) {
+                result.setMaxQty(Double.POSITIVE_INFINITY);
             } else {
-                result.setMaxNotionalValue(jsonWrapper.getDouble("maxNotionalValue"));
+                result.setMaxQty(jsonWrapper.getDouble("maxQty"));
             }
             result.setSymbol(jsonWrapper.getString("symbol"));
             return result;
@@ -1312,21 +1308,18 @@ class RestApiRequestImpl {
             JsonWrapperArray dataArray = jsonWrapper.getJsonArray("data");
             dataArray.forEach((item) -> {
                 PositionRisk element = new PositionRisk();
-                element.setEntryPrice(item.getBigDecimal("entryPrice"));
-                element.setLeverage(item.getBigDecimal("leverage"));
-                if(item.getString("maxNotionalValue").equals("INF")) {
-                    element.setMaxNotionalValue(Double.POSITIVE_INFINITY);
-                } else {
-                    element.setMaxNotionalValue(item.getDouble("maxNotionalValue"));
-                }
-                element.setLiquidationPrice(item.getBigDecimal("liquidationPrice"));
-                element.setMarkPrice(item.getBigDecimal("markPrice"));
-                element.setPositionAmt(item.getBigDecimal("positionAmt"));
                 element.setSymbol(item.getString("symbol"));
-                element.setIsolatedMargin(item.getString("isolatedMargin"));
-                element.setPositionSide(item.getString("positionSide"));
-                element.setMarginType(item.getString("marginType"));
+                element.setPositionAmt(item.getBigDecimal("positionAmt"));
+                element.setEntryPrice(item.getBigDecimal("entryPrice"));
+                element.setMarkPrice(item.getBigDecimal("markPrice"));
                 element.setUnrealizedProfit(item.getBigDecimal("unRealizedProfit"));
+                element.setLiquidationPrice(item.getBigDecimal("liquidationPrice"));
+                element.setLeverage(item.getBigDecimal("leverage"));
+                element.setMaxQty(item.getBigDecimal("maxQty"));
+                element.setMarginType(item.getString("marginType"));
+                element.setIsolatedMargin(item.getString("isolatedMargin"));
+                element.setIsAutoAddMargin(item.getBoolean("isAutoAddMargin"));
+                element.setPositionSide(item.getString("positionSide"));
                 result.add(element);
             });
             return result;
@@ -1431,6 +1424,22 @@ class RestApiRequestImpl {
                 element.setTradeId(item.getString("tradeId"));
                 result.add(element);
             });
+            return result;
+        });
+        return request;
+    }
+
+    RestApiRequest<CommissionRate> getCommissionRate(String symbol) {
+        RestApiRequest<CommissionRate> request = new RestApiRequest<>();
+        UrlParamsBuilder builder = UrlParamsBuilder.build()
+                .putToUrl("symbol", symbol);
+        request.request = createRequestByGetWithSignature("/dapi/v1/commissionRate", builder);
+
+        request.jsonParser = (jsonWrapper -> {
+            CommissionRate result = new CommissionRate();
+            result.setSymbol(jsonWrapper.getString("symbol"));
+            result.setMakerCommissionRate(jsonWrapper.getBigDecimal("makerCommissionRate"));
+            result.setTakerCommissionRate(jsonWrapper.getBigDecimal("takerCommissionRate"));
             return result;
         });
         return request;

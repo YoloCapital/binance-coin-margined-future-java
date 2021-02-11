@@ -327,6 +327,13 @@ public interface SyncRequestClient {
     List<Income> getIncomeHistory(String symbol, IncomeType incomeType, Long startTime, Long endTime, Integer limit);
 
     /**
+     * Get user commission rate.
+     *
+     * @return CommissionRate.
+     */
+    CommissionRate getCommissionRate(String symbol);
+
+    /**
      * Start user data stream.
      *
      * @return listenKey.

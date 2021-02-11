@@ -7,27 +7,29 @@ import java.math.BigDecimal;
 
 public class PositionRisk {
 
-    private BigDecimal entryPrice;
-
-    private BigDecimal leverage;
-
-    private Double maxNotionalValue;
-
-    private BigDecimal liquidationPrice;
-
-    private BigDecimal markPrice;
+    private String symbol;
 
     private BigDecimal positionAmt;
 
-    private String symbol;
+    private BigDecimal entryPrice;
 
-    private String isolatedMargin;
+    private BigDecimal markPrice;
 
-    private String positionSide;
+    private BigDecimal unrealizedProfit;
+
+    private BigDecimal liquidationPrice;
+
+    private BigDecimal leverage;
+
+    private BigDecimal maxQty;
 
     private String marginType;
 
-    private BigDecimal unrealizedProfit;
+    private String isolatedMargin;
+
+    private Boolean isAutoAddMargin;
+
+    private String positionSide;
 
     public BigDecimal getEntryPrice() {
         return entryPrice;
@@ -45,12 +47,12 @@ public class PositionRisk {
         this.leverage = leverage;
     }
 
-    public Double getMaxNotionalValue() {
-        return maxNotionalValue;
+    public BigDecimal getMaxQty() {
+        return maxQty;
     }
 
-    public void setMaxNotionalValue(Double maxNotionalValue) {
-        this.maxNotionalValue = maxNotionalValue;
+    public void setMaxQty(BigDecimal maxQty) {
+        this.maxQty = maxQty;
     }
 
     public BigDecimal getLiquidationPrice() {
@@ -109,6 +111,14 @@ public class PositionRisk {
         this.positionSide = positionSide;
     }
 
+    public Boolean getIsAutoAddMargin() {
+        return isAutoAddMargin;
+    }
+
+    public void setIsAutoAddMargin(Boolean isAutoAddMargin) {
+        isAutoAddMargin = isAutoAddMargin;
+    }
+
     public String getMarginType() {
         return marginType;
     }
@@ -120,10 +130,11 @@ public class PositionRisk {
     @Override
     public String toString() {
         return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("entryPrice", entryPrice)
-                .append("leverage", leverage).append("maxNotionalValue", maxNotionalValue)
+                .append("leverage", leverage).append("maxQty", maxQty)
                 .append("liquidationPrice", liquidationPrice).append("markPrice", markPrice)
                 .append("positionAmt", positionAmt).append("symbol", symbol)
                 .append("unrealizedProfit", unrealizedProfit).append("isolatedMargin", isolatedMargin)
-                .append("positionSide", positionSide).append("marginType", marginType).toString();
+                .append("positionSide", positionSide).append("isAutoAddMargin", isAutoAddMargin)
+                .append("marginType", marginType).toString();
     }
 }
