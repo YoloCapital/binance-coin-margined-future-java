@@ -180,14 +180,14 @@ class RestApiRequestImpl {
             result.setRateLimits(elementList);
 
             List<ExchangeFilter> filterList = new LinkedList<>();
-            JsonWrapperArray filterArray = jsonWrapper.getJsonArray("exchangeFilters");
-            filterArray.forEach((item) -> {
-                ExchangeFilter filter = new ExchangeFilter();
-                filter.setFilterType(item.getString("filterType"));
-                filter.setMaxNumOrders(item.getLong("maxNumOrders"));
-                filter.setMaxNumAlgoOrders(item.getLong("maxNumAlgoOrders"));
-                filterList.add(filter);
-            });
+//            JsonWrapperArray filterArray = jsonWrapper.getJsonArray("exchangeFilters");
+//            filterArray.forEach((item) -> {
+//                ExchangeFilter filter = new ExchangeFilter();
+//                filter.setFilterType(item.getString("filterType"));
+//                filter.setMaxNumOrders(item.getLong("maxNumOrders"));
+//                filter.setMaxNumAlgoOrders(item.getLong("maxNumAlgoOrders"));
+//                filterList.add(filter);
+//            });
             result.setExchangeFilters(filterList);
 
             List<ExchangeInfoEntry> symbolList = new LinkedList<>();
@@ -195,17 +195,27 @@ class RestApiRequestImpl {
             symbolArray.forEach((item) -> {
                 ExchangeInfoEntry symbol = new ExchangeInfoEntry();
                 symbol.setSymbol(item.getString("symbol"));
-                symbol.setStatus(item.getString("status"));
-                symbol.setMaintMarginPercent(item.getBigDecimal("maintMarginPercent"));
-                symbol.setRequiredMarginPercent(item.getBigDecimal("requiredMarginPercent"));
-                symbol.setBaseAsset(item.getString("baseAsset"));
+                symbol.setPair(item.getString("pair"));
+                symbol.setContractType(item.getString("contractType"));
+                symbol.setDeliveryDate(item.getLong("deliveryDate"));
+                symbol.setOnboardDate(item.getLong("onboardDate"));
+                symbol.setContractStatus(item.getString("contractStatus"));
+                symbol.setContractSize(item.getLong("contractSize"));
                 symbol.setQuoteAsset(item.getString("quoteAsset"));
+                symbol.setBaseAsset(item.getString("baseAsset"));
+                symbol.setMarginAsset(item.getString("marginAsset"));
                 symbol.setPricePrecision(item.getLong("pricePrecision"));
                 symbol.setQuantityPrecision(item.getLong("quantityPrecision"));
                 symbol.setBaseAssetPrecision(item.getLong("baseAssetPrecision"));
                 symbol.setQuotePrecision(item.getLong("quotePrecision"));
+                symbol.setEqualQtyPrecision(item.getLong("equalQtyPrecision"));
+                symbol.setTriggerProtect(item.getBigDecimal("triggerProtect"));
+                symbol.setMaintMarginPercent(item.getBigDecimal("maintMarginPercent"));
+                symbol.setRequiredMarginPercent(item.getBigDecimal("requiredMarginPercent"));
+                symbol.setUnderlyingType(item.getString("underlyingType"));
                 symbol.setOrderTypes(item.getJsonArray("orderTypes").convert2StringList());
-                symbol.setTimeInForce(item.getJsonArray("orderTypes").convert2StringList());
+                symbol.setTimeInForce(item.getJsonArray("timeInForce").convert2StringList());
+
                 List<List<Map<String, String>>> valList = new LinkedList<>();
                 JsonWrapperArray valArray = item.getJsonArray("filters");
                 valArray.forEach((val) -> {

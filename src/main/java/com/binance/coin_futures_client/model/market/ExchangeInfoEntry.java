@@ -12,7 +12,17 @@ public class ExchangeInfoEntry {
 
     private String symbol;
 
-    private String status;
+    private String pair;
+
+    private String contractType;
+
+    private Long deliveryDate;
+
+    private Long onboardDate;
+
+    private String contractStatus;
+
+    private Long contractSize;
 
     private BigDecimal maintMarginPercent;
 
@@ -22,6 +32,8 @@ public class ExchangeInfoEntry {
 
     private String quoteAsset;
 
+    private String marginAsset;
+
     private Long pricePrecision;
 
     private Long quantityPrecision;
@@ -29,6 +41,12 @@ public class ExchangeInfoEntry {
     private Long baseAssetPrecision;
 
     private Long quotePrecision;
+
+    private Long equalQtyPrecision;
+
+    private BigDecimal triggerProtect;
+
+    private String underlyingType;
 
     private List<String> orderTypes;
 
@@ -44,12 +62,52 @@ public class ExchangeInfoEntry {
         this.symbol = symbol;
     }
 
-    public String getStatus() {
-        return status;
+    public String getPair() {
+        return pair;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setPair(String pair) {
+        this.pair = pair;
+    }
+
+    public String getContractType() {
+        return contractType;
+    }
+
+    public void setContractType(String contractType) {
+        this.contractType = contractType;
+    }
+
+    public Long getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public void setDeliveryDate(Long deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
+    public Long getOnboardDate() {
+        return onboardDate;
+    }
+
+    public void setOnboardDate(Long onboardDate) {
+        this.onboardDate = onboardDate;
+    }
+
+    public String getContractStatus() {
+        return contractStatus;
+    }
+
+    public void setContractStatus(String contractStatus) {
+        this.contractStatus = contractStatus;
+    }
+
+    public Long getContractSize() {
+        return contractSize;
+    }
+
+    public void setContractSize(Long contractSize) {
+        this.contractSize = contractSize;
     }
 
     public BigDecimal getMaintMarginPercent() {
@@ -84,6 +142,14 @@ public class ExchangeInfoEntry {
         this.quoteAsset = quoteAsset;
     }
 
+    public String getMarginAsset() {
+        return marginAsset;
+    }
+
+    public void setMarginAsset(String marginAsset) {
+        this.marginAsset = marginAsset;
+    }
+
     public Long getPricePrecision() {
         return pricePrecision;
     }
@@ -116,12 +182,36 @@ public class ExchangeInfoEntry {
         this.quotePrecision = quotePrecision;
     }
 
+    public Long getEqualQtyPrecision() {
+        return equalQtyPrecision;
+    }
+
+    public void setEqualQtyPrecision(Long equalQtyPrecision) {
+        this.equalQtyPrecision = equalQtyPrecision;
+    }
+
     public List<String> getOrderTypes() {
         return orderTypes;
     }
 
     public void setOrderTypes(List<String> orderTypes) {
         this.orderTypes = orderTypes;
+    }
+
+    public BigDecimal getTriggerProtect() {
+        return triggerProtect;
+    }
+
+    public void setTriggerProtect(BigDecimal triggerProtect) {
+        this.triggerProtect = triggerProtect;
+    }
+
+    public String getUnderlyingType() {
+        return underlyingType;
+    }
+
+    public void setUnderlyingType(String underlyingType) {
+        this.underlyingType = underlyingType;
     }
 
     public List<String> getTimeInForce() {
@@ -142,8 +232,11 @@ public class ExchangeInfoEntry {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("symbol", symbol)
-                .append("status", status).append("maintMarginPercent", maintMarginPercent)
+        return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE)
+                .append("symbol", symbol).append("pair", pair)
+                .append("contractType", contractType).append("deliveryDate", deliveryDate).append("onboardDate", onboardDate)
+                .append("contractStatus", contractStatus).append("contractSize", contractSize)
+                .append("maintMarginPercent", maintMarginPercent)
                 .append("requiredMarginPercent", requiredMarginPercent).append("baseAsset", baseAsset)
                 .append("quoteAsset", quoteAsset).append("pricePrecision", pricePrecision)
                 .append("quantityPrecision", quantityPrecision).append("baseAssetPrecision", baseAssetPrecision)
