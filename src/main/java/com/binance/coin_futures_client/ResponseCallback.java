@@ -17,3 +17,4 @@ public interface ResponseCallback<T> {
    */
   void onResponse(T response);
 }
+
