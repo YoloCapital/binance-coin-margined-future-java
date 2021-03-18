@@ -18,7 +18,9 @@ import com.binance.coin_futures_client.model.user.UserDataUpdateEvent;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class WebSocketStreamClientImpl implements SubscriptionClient {
 
@@ -27,7 +29,7 @@ public class WebSocketStreamClientImpl implements SubscriptionClient {
 
     private final WebsocketRequestImpl requestImpl;
 
-    private final List<WebSocketConnection> connections = new LinkedList<>();
+    private final Map<Integer, WebSocketConnection> connections = new ConcurrentHashMap<>();
 
     private final String apiKey;
 
@@ -42,25 +44,26 @@ public class WebSocketStreamClientImpl implements SubscriptionClient {
         this.requestImpl = new WebsocketRequestImpl();
     }
 
-    private <T> void createConnection(WebsocketRequest<T> request, boolean autoClose) {
+    private <T> int createConnection(WebsocketRequest<T> request, boolean autoClose) {
         if (watchDog == null) {
             watchDog = new WebSocketWatchDog(options);
         }
         WebSocketConnection connection = new WebSocketConnection(apiKey, secretKey, options, request, watchDog,
                 autoClose);
         if (autoClose == false) {
-            connections.add(connection);
+            connections.put(connection.getConnectionId(), connection);
         }
         connection.connect();
+        return connection.getConnectionId();
     }
 
-    private <T> void createConnection(WebsocketRequest<T> request) {
-        createConnection(request, false);
+    private <T> int createConnection(WebsocketRequest<T> request) {
+        return createConnection(request, false);
     }
 
     @Override
     public void unsubscribeAll() {
-        for (WebSocketConnection connection : connections) {
+        for (WebSocketConnection connection : connections.values()) {
             watchDog.onClosedNormally(connection);
             connection.close();
         }
@@ -68,135 +71,146 @@ public class WebSocketStreamClientImpl implements SubscriptionClient {
     }
 
     @Override
-    public void subscribeAggregateTradeEvent(String symbol,
+    public void unsubscribe(int connectionId) {
+        if (connections.containsKey(connectionId)) {
+            WebSocketConnection connection = connections.get(connectionId);
+
+            watchDog.onClosedNormally(connection);
+            connection.close();
+            connections.remove(connectionId);
+        }
+    }
+
+    @Override
+    public int subscribeAggregateTradeEvent(String symbol,
             SubscriptionListener<AggregateTradeEvent> subscriptionListener, 
             SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeAggregateTradeEvent(symbol, subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeMarkPriceEvent(String symbol,
+    public int subscribeMarkPriceEvent(String symbol,
             SubscriptionListener<MarkPriceEvent> subscriptionListener, 
             SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeMarkPriceEvent(symbol, subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeCandlestickEvent(String symbol, CandlestickInterval interval,
+    public int subscribeCandlestickEvent(String symbol, CandlestickInterval interval,
             SubscriptionListener<CandlestickEvent> subscriptionListener, 
             SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeCandlestickEvent(symbol, interval, subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeContinuousCandlestickEvent(String pair, ContractType contractType,
+    public int subscribeContinuousCandlestickEvent(String pair, ContractType contractType,
                                                     CandlestickInterval interval,
                                                     SubscriptionListener<CandlestickEvent> subscriptionListener,
                                                     SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeContinuousCandlestickEvent(pair, contractType, interval, subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeIndexPriceCandlestickEvent(String pair, CandlestickInterval interval,
+    public int subscribeIndexPriceCandlestickEvent(String pair, CandlestickInterval interval,
                                                     SubscriptionListener<CandlestickEvent> subscriptionListener,
                                                     SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeIndexPriceCandlestickEvent(pair, interval, subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeMarkPriceCandlestickEvent(String symbol, CandlestickInterval interval,
+    public int subscribeMarkPriceCandlestickEvent(String symbol, CandlestickInterval interval,
                                                    SubscriptionListener<CandlestickEvent> subscriptionListener,
                                                    SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeMarkPriceCandlestickEvent(symbol, interval, subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeSymbolMiniTickerEvent(String symbol,
+    public int subscribeSymbolMiniTickerEvent(String symbol,
             SubscriptionListener<SymbolMiniTickerEvent> subscriptionListener, 
             SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeSymbolMiniTickerEvent(symbol, subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeAllMiniTickerEvent(SubscriptionListener<List<SymbolMiniTickerEvent>> subscriptionListener, 
+    public int subscribeAllMiniTickerEvent(SubscriptionListener<List<SymbolMiniTickerEvent>> subscriptionListener,
             SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeAllMiniTickerEvent(subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeSymbolTickerEvent(String symbol,
+    public int subscribeSymbolTickerEvent(String symbol,
             SubscriptionListener<SymbolTickerEvent> subscriptionListener, 
             SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeSymbolTickerEvent(symbol, subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeAllTickerEvent(SubscriptionListener<List<SymbolTickerEvent>> subscriptionListener, 
+    public int subscribeAllTickerEvent(SubscriptionListener<List<SymbolTickerEvent>> subscriptionListener,
             SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeAllTickerEvent(subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeSymbolBookTickerEvent(String symbol,
+    public int subscribeSymbolBookTickerEvent(String symbol,
             SubscriptionListener<SymbolBookTickerEvent> subscriptionListener, 
             SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeSymbolBookTickerEvent(symbol, subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeAllBookTickerEvent(SubscriptionListener<SymbolBookTickerEvent> subscriptionListener, 
+    public int subscribeAllBookTickerEvent(SubscriptionListener<SymbolBookTickerEvent> subscriptionListener,
             SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeAllBookTickerEvent(subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeSymbolLiquidationOrderEvent(String symbol,
+    public int subscribeSymbolLiquidationOrderEvent(String symbol,
             SubscriptionListener<LiquidationOrderEvent> subscriptionListener, 
             SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeSymbolLiquidationOrderEvent(symbol, subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeAllLiquidationOrderEvent(SubscriptionListener<LiquidationOrderEvent> subscriptionListener, 
+    public int subscribeAllLiquidationOrderEvent(SubscriptionListener<LiquidationOrderEvent> subscriptionListener,
             SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeAllLiquidationOrderEvent(subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeBookDepthEvent(String symbol, Integer limit,
+    public int subscribeBookDepthEvent(String symbol, Integer limit,
             SubscriptionListener<OrderBookEvent> subscriptionListener, 
             SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeBookDepthEvent(symbol, limit, subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeDiffDepthEvent(String symbol,
+    public int subscribeDiffDepthEvent(String symbol,
             SubscriptionListener<OrderBookEvent> subscriptionListener, 
             SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeDiffDepthEvent(symbol, subscriptionListener, errorHandler));
     }
 
     @Override
-    public void subscribeUserDataEvent(String listenKey,
+    public int subscribeUserDataEvent(String listenKey,
             SubscriptionListener<UserDataUpdateEvent> subscriptionListener, 
             SubscriptionErrorHandler errorHandler) {
-        createConnection(
+        return createConnection(
                 requestImpl.subscribeUserDataEvent(listenKey, subscriptionListener, errorHandler));
     }
 
