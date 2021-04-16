@@ -216,10 +216,10 @@ class RestApiRequestImpl {
                 symbol.setOrderTypes(item.getJsonArray("orderTypes").convert2StringList());
                 symbol.setTimeInForce(item.getJsonArray("timeInForce").convert2StringList());
 
-                List<List<Map<String, String>>> valList = new LinkedList<>();
+                List<Map<String, String>> valList = new LinkedList<>();
                 JsonWrapperArray valArray = item.getJsonArray("filters");
                 valArray.forEach((val) -> {
-                    valList.add(val.convert2DictList());
+                    valList.add(val.convert2Dict());
                 });
                 symbol.setFilters(valList);
                 symbolList.add(symbol);
