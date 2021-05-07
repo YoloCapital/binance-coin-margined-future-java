@@ -45,10 +45,6 @@ public class Order {
 
     private String origType;
 
-    private BigDecimal activatePrice;
-
-    private BigDecimal priceRate;
-
     private Long updateTime;
 
     private String workingType;
@@ -207,22 +203,6 @@ public class Order {
         this.origType = origType;
     }
 
-    public BigDecimal getActivatePrice() {
-        return activatePrice;
-    }
-
-    public void setActivatePrice(BigDecimal activatePrice) {
-        this.activatePrice = activatePrice;
-    }
-
-    public BigDecimal getPriceRate() {
-        return priceRate;
-    }
-
-    public void setPriceRate(BigDecimal priceRate) {
-        this.priceRate = priceRate;
-    }
-
     public Long getUpdateTime() {
         return updateTime;
     }
@@ -259,7 +239,6 @@ public class Order {
                 .append("stopPrice", stopPrice).append("symbol", symbol)
                 .append("pair", pair).append("timeInForce", timeInForce)
                 .append("type", type).append("origType", origType)
-                .append("activatePrice", activatePrice).append("priceRate", priceRate)
                 .append("updateTime", updateTime).append("workingType", workingType)
                 .append("priceProtect", priceProtect).toString();
     }

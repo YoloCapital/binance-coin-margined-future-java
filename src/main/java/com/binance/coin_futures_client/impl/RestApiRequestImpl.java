@@ -809,8 +809,6 @@ class RestApiRequestImpl {
             result.setTimeInForce(jsonWrapper.getString("timeInForce"));
             result.setType(jsonWrapper.getString("type"));
             result.setOrigType(jsonWrapper.getString("origType"));
-            result.setActivatePrice(jsonWrapper.getBigDecimal("activatePrice"));
-            result.setPriceRate(jsonWrapper.getBigDecimal("priceRate"));
             result.setUpdateTime(jsonWrapper.getLong("updateTime"));
             result.setWorkingType(jsonWrapper.getString("workingType"));
             result.setPriceProtect(jsonWrapper.getBoolean("priceProtect"));
